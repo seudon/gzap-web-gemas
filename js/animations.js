@@ -700,7 +700,7 @@ function playCorrectEffect(button, combo) {
         createAurora();
 
     } else {
-        // コンボ21+: 究極の派手さ - 全エフェクト同時発動！
+        // コンボ21+: 究極の派手さ - 全エフェクト同時発動！(Phase 3: パフォーマンス最適化版)
         gsap.to(button, {
             scale: 2.0,
             rotation: 1800,
@@ -709,17 +709,17 @@ function playCorrectEffect(button, combo) {
             repeat: 1,
             ease: 'back.out(1.7)'
         });
-        // パーティクル大量発生
-        createParticles(x, y, 120, 'star');
-        createSpiralParticles(x, y, 40);
-        createHeartParticles(x, y, 30);
-        createExplosionParticles(x, y, 30);
-        createStarBurst(x, y, 10);
+        // パーティクル大量発生（Phase 3: 数を最適化 240→145）
+        createParticles(x, y, 80, 'star');
+        createSpiralParticles(x, y, 25);
+        createHeartParticles(x, y, 20);
+        createExplosionParticles(x, y, 20);
+        createStarBurst(x, y, 8);
 
         // フラッシュ・グロー系
-        flashScreen(0.9);
+        flashScreen(0.85); // Phase 3: 強度を微調整 (0.9 → 0.85)
         createRadialGlow(x, y);
-        createRainbowRing(x, y, 6);
+        createRainbowRing(x, y, 5); // Phase 3: リング数削減 (6 → 5)
         createColorfulWaves(x, y);
 
         // 光系エフェクト
@@ -729,7 +729,7 @@ function playCorrectEffect(button, combo) {
 
         // テキスト・画面効果
         createFloatingText(x, y, combo);
-        shakeScreen(18);
+        shakeScreen(15); // Phase 3: シェイク強度を微調整 (18 → 15)
         pulseBackground();
         zoomAndRotateScreen();
 
@@ -991,14 +991,14 @@ function createExplosionParticles(x, y, count) {
 }
 
 /**
- * 花火エフェクト（Phase 2新規）
+ * 花火エフェクト（Phase 2新規、Phase 3最適化）
  */
 function createFireworks() {
     for (let i = 0; i < 3; i++) {
         setTimeout(() => {
             const x = gsap.utils.random(window.innerWidth * 0.2, window.innerWidth * 0.8);
             const y = gsap.utils.random(window.innerHeight * 0.2, window.innerHeight * 0.6);
-            createExplosionParticles(x, y, 30);
+            createExplosionParticles(x, y, 20); // Phase 3: パーティクル数削減 (30 → 20)
         }, i * 300);
     }
 }

@@ -212,7 +212,7 @@ function handleCorrectAnswer(button) {
         levelUp();
     }
 
-    // 次の問題へ
+    // 次の問題へ（Phase 3: テンポアップ 1500ms → 1200ms）
     setTimeout(() => {
         gameState.isAnswering = false;
 
@@ -222,7 +222,7 @@ function handleCorrectAnswer(button) {
         } else {
             generateQuestion();
         }
-    }, 1500);
+    }, 1200);
 }
 
 /**
