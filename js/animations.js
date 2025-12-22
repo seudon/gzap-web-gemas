@@ -6,6 +6,28 @@
 let currentAnimationLevel = null;
 
 /**
+ * 全てのボタンアニメーションを停止（Phase 3新規）
+ */
+function stopAllButtonAnimations() {
+    const buttons = document.querySelectorAll('.answer-button');
+
+    // 全てのアニメーションを停止
+    buttons.forEach(button => {
+        gsap.killTweensOf(button);
+    });
+
+    // ボタンを初期位置に戻す
+    gsap.set(buttons, {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        scale: 1,
+        opacity: 1,
+        clearProps: 'all'
+    });
+}
+
+/**
  * 問題表示のタイムラインアニメーション
  * 数字と記号が順番に表示される
  */

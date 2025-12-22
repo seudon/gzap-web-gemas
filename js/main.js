@@ -188,6 +188,9 @@ function handleAnswer(answer, button) {
 function handleCorrectAnswer(button) {
     console.log('✅ 正解！ コンボ: ' + gameState.combo + ' → ' + (gameState.combo + 1));
 
+    // Phase 3: 正解したらすぐにボタンの動きを停止
+    stopAllButtonAnimations();
+
     // コンボ増加
     gameState.combo++;
 
@@ -247,6 +250,9 @@ function calculateExpGain(combo) {
  */
 function handleWrongAnswer(button) {
     console.log('❌ 不正解... コンボリセット！');
+
+    // Phase 3: 不正解でもボタンの動きを停止
+    stopAllButtonAnimations();
 
     // コンボリセット
     const oldCombo = gameState.combo;
