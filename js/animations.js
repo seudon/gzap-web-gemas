@@ -560,42 +560,128 @@ function createParticles(x, y, count, type = 'small') {
 }
 
 /**
- * 正解時のエフェクト
+ * 正解時のエフェクト（Phase 2強化版）
  * @param {HTMLElement} button - クリックされたボタン
  * @param {number} combo - 現在のコンボ数
  */
 function playCorrectEffect(button, combo) {
-    // ボタンのアニメーション
-    gsap.to(button, {
-        scale: 1.3,
-        duration: 0.2,
-        yoyo: true,
-        repeat: 1,
-        ease: 'power2.out'
-    });
-
     // ボタンの位置を取得
     const rect = button.getBoundingClientRect();
     const x = rect.left + rect.width / 2;
     const y = rect.top + rect.height / 2;
 
-    // コンボ数に応じたエフェクト
-    if (combo <= 2) {
-        createParticles(x, y, 8, 'small');
+    // コンボ数に応じた段階的なエフェクト（7段階）
+    if (combo === 1) {
+        // コンボ1: 基本エフェクト
+        gsap.to(button, {
+            scale: 1.2,
+            duration: 0.2,
+            yoyo: true,
+            repeat: 1,
+            ease: 'power2.out'
+        });
+        createParticles(x, y, 10, 'small');
+
+    } else if (combo <= 3) {
+        // コンボ2-3: パーティクル増加
+        gsap.to(button, {
+            scale: 1.3,
+            rotation: 360,
+            duration: 0.3,
+            yoyo: true,
+            repeat: 1,
+            ease: 'back.out(1.7)'
+        });
+        createParticles(x, y, 20, 'small');
+        flashScreen(0.15);
+
     } else if (combo <= 5) {
-        createParticles(x, y, 15, 'medium');
-        // 光の輪
-        flashScreen(0.2);
-    } else if (combo <= 9) {
-        createParticles(x, y, 25, 'large');
-        flashScreen(0.4);
-        // 画面全体に光
+        // コンボ4-5: 中サイズパーティクル + 光の輪
+        gsap.to(button, {
+            scale: 1.4,
+            rotation: 360,
+            duration: 0.3,
+            yoyo: true,
+            repeat: 1,
+            ease: 'back.out(1.7)'
+        });
+        createParticles(x, y, 30, 'medium');
+        flashScreen(0.25);
+        createRainbowRing(x, y, 1);
+
+    } else if (combo <= 7) {
+        // コンボ6-7: 大サイズ + グロー + 波紋
+        gsap.to(button, {
+            scale: 1.5,
+            rotation: 720,
+            duration: 0.4,
+            yoyo: true,
+            repeat: 1,
+            ease: 'back.out(1.7)'
+        });
+        createParticles(x, y, 45, 'large');
+        createSpiralParticles(x, y, 15);
+        flashScreen(0.35);
         createRadialGlow(x, y);
-    } else {
-        createParticles(x, y, 35, 'star');
-        flashScreen(0.6);
+        createRainbowRing(x, y, 2);
+
+    } else if (combo <= 10) {
+        // コンボ8-10: 超派手 + 波紋 + 画面シェイク
+        gsap.to(button, {
+            scale: 1.6,
+            rotation: 720,
+            duration: 0.4,
+            yoyo: true,
+            repeat: 1,
+            ease: 'back.out(1.7)'
+        });
+        createParticles(x, y, 60, 'large');
+        createSpiralParticles(x, y, 20);
+        flashScreen(0.5);
         createRadialGlow(x, y);
+        createRainbowRing(x, y, 3);
+        createColorfulWaves(x, y);
+        shakeScreen(5);
+
+    } else if (combo <= 15) {
+        // コンボ11-15: 極派手 + 流れ星
+        gsap.to(button, {
+            scale: 1.7,
+            rotation: 1080,
+            duration: 0.5,
+            yoyo: true,
+            repeat: 1,
+            ease: 'back.out(1.7)'
+        });
+        createParticles(x, y, 75, 'star');
+        createSpiralParticles(x, y, 25);
+        flashScreen(0.65);
+        createRadialGlow(x, y);
+        createRainbowRing(x, y, 4);
+        createColorfulWaves(x, y);
+        shakeScreen(8);
         createShootingStars();
+
+    } else {
+        // コンボ16+: 最高レベル
+        gsap.to(button, {
+            scale: 1.8,
+            rotation: 1440,
+            duration: 0.5,
+            yoyo: true,
+            repeat: 1,
+            ease: 'back.out(1.7)'
+        });
+        createParticles(x, y, 80, 'star');
+        createSpiralParticles(x, y, 30);
+        createExplosionParticles(x, y, 20);
+        flashScreen(0.8);
+        createRadialGlow(x, y);
+        createRainbowRing(x, y, 5);
+        createColorfulWaves(x, y);
+        shakeScreen(12);
+        createShootingStars();
+        createFireworks();
     }
 }
 
@@ -673,6 +759,189 @@ function createShootingStars() {
             ease: 'none',
             onComplete: () => star.remove()
         });
+    }
+}
+
+/**
+ * 虹色リングエフェクト（Phase 2新規）
+ * @param {number} x - X座標
+ * @param {number} y - Y座標
+ * @param {number} count - リングの数
+ */
+function createRainbowRing(x, y, count) {
+    const colors = [
+        'rgba(255, 0, 0, 0.6)',    // 赤
+        'rgba(255, 165, 0, 0.6)',  // オレンジ
+        'rgba(255, 255, 0, 0.6)',  // 黄
+        'rgba(0, 255, 0, 0.6)',    // 緑
+        'rgba(0, 191, 255, 0.6)',  // 青
+        'rgba(138, 43, 226, 0.6)'  // 紫
+    ];
+
+    for (let i = 0; i < count; i++) {
+        const ring = document.createElement('div');
+        ring.style.position = 'fixed';
+        ring.style.left = x + 'px';
+        ring.style.top = y + 'px';
+        ring.style.width = '50px';
+        ring.style.height = '50px';
+        ring.style.borderRadius = '50%';
+        ring.style.border = `3px solid ${colors[i % colors.length]}`;
+        ring.style.transform = 'translate(-50%, -50%)';
+        ring.style.pointerEvents = 'none';
+        ring.style.zIndex = '150';
+        document.body.appendChild(ring);
+
+        gsap.to(ring, {
+            scale: 15 + i * 3,
+            opacity: 0,
+            duration: 1.2,
+            delay: i * 0.1,
+            ease: 'power2.out',
+            onComplete: () => ring.remove()
+        });
+    }
+}
+
+/**
+ * 螺旋軌道パーティクル（Phase 2新規）
+ * @param {number} x - X座標
+ * @param {number} y - Y座標
+ * @param {number} count - パーティクル数
+ */
+function createSpiralParticles(x, y, count) {
+    const container = document.getElementById('particleContainer');
+    const colors = ['#ffd93d', '#ff6b6b', '#6bcf7f', '#4facfe', '#f093fb', '#fa709a'];
+
+    for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.width = '15px';
+        particle.style.height = '15px';
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.boxShadow = '0 0 10px currentColor';
+        container.appendChild(particle);
+
+        // 螺旋軌道のアニメーション
+        const angle = (i / count) * Math.PI * 4; // 2回転
+        const radius = 100 + i * 8;
+        const duration = 1.2;
+
+        gsap.to(particle, {
+            x: Math.cos(angle) * radius,
+            y: Math.sin(angle) * radius,
+            opacity: 0,
+            scale: 0,
+            rotation: angle * 57.3, // ラジアンを度に変換
+            duration: duration,
+            ease: 'power2.out',
+            onComplete: () => particle.remove()
+        });
+    }
+}
+
+/**
+ * カラフル波紋エフェクト（Phase 2新規）
+ * @param {number} x - X座標
+ * @param {number} y - Y座標
+ */
+function createColorfulWaves(x, y) {
+    const colors = ['#ff6b6b', '#4facfe', '#6bcf7f', '#ffd93d', '#f093fb'];
+
+    for (let i = 0; i < 5; i++) {
+        const wave = document.createElement('div');
+        wave.style.position = 'fixed';
+        wave.style.left = x + 'px';
+        wave.style.top = y + 'px';
+        wave.style.width = '80px';
+        wave.style.height = '80px';
+        wave.style.borderRadius = '50%';
+        wave.style.border = `4px solid ${colors[i]}`;
+        wave.style.transform = 'translate(-50%, -50%)';
+        wave.style.pointerEvents = 'none';
+        wave.style.zIndex = '150';
+        document.body.appendChild(wave);
+
+        gsap.to(wave, {
+            scale: 8,
+            opacity: 0,
+            duration: 1.5,
+            delay: i * 0.15,
+            ease: 'power1.out',
+            onComplete: () => wave.remove()
+        });
+    }
+}
+
+/**
+ * 画面シェイクエフェクト（Phase 2新規）
+ * @param {number} intensity - シェイクの強度（ピクセル）
+ */
+function shakeScreen(intensity) {
+    const gameArea = document.querySelector('.game-container') || document.body;
+
+    gsap.to(gameArea, {
+        x: intensity,
+        duration: 0.05,
+        yoyo: true,
+        repeat: 7,
+        ease: 'power2.inOut',
+        onComplete: () => {
+            gsap.set(gameArea, { x: 0 });
+        }
+    });
+}
+
+/**
+ * 爆発型パーティクル（Phase 2新規）
+ * @param {number} x - X座標
+ * @param {number} y - Y座標
+ * @param {number} count - パーティクル数
+ */
+function createExplosionParticles(x, y, count) {
+    const container = document.getElementById('particleContainer');
+    const colors = ['#ff0000', '#ff7f00', '#ffff00', '#ffffff'];
+
+    for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.width = '20px';
+        particle.style.height = '20px';
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.boxShadow = '0 0 15px currentColor';
+        particle.style.borderRadius = '50%';
+        container.appendChild(particle);
+
+        // 全方向に爆発
+        const angle = (i / count) * Math.PI * 2;
+        const distance = gsap.utils.random(150, 250);
+
+        gsap.to(particle, {
+            x: Math.cos(angle) * distance,
+            y: Math.sin(angle) * distance,
+            opacity: 0,
+            scale: 0,
+            duration: gsap.utils.random(0.8, 1.2),
+            ease: 'power3.out',
+            onComplete: () => particle.remove()
+        });
+    }
+}
+
+/**
+ * 花火エフェクト（Phase 2新規）
+ */
+function createFireworks() {
+    for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+            const x = gsap.utils.random(window.innerWidth * 0.2, window.innerWidth * 0.8);
+            const y = gsap.utils.random(window.innerHeight * 0.2, window.innerHeight * 0.6);
+            createExplosionParticles(x, y, 30);
+        }, i * 300);
     }
 }
 
