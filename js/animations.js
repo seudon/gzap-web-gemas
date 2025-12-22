@@ -9,11 +9,26 @@ let currentAnimationLevel = null;
  * 全てのボタンアニメーションを停止（Phase 3新規）
  */
 function stopAllButtonAnimations() {
+    console.log('🛑 stopAllButtonAnimations 呼び出し');
+    console.log('  現在のアニメーションレベル:', currentAnimationLevel);
+
     const buttons = document.querySelectorAll('.answer-button');
+    console.log('  対象ボタン数:', buttons.length);
+
+    // 🔧 重要: currentAnimationLevelをnullにして再帰的アニメーションを停止
+    currentAnimationLevel = null;
+    console.log('  currentAnimationLevel を null に設定');
+
+    // 各ボタンのアニメーション数を確認
+    buttons.forEach((button, index) => {
+        const tweensCount = gsap.getTweensOf(button).length;
+        console.log('  ボタン' + (index + 1) + ' のアニメーション数:', tweensCount);
+    });
 
     // 全てのアニメーションを停止
-    buttons.forEach(button => {
+    buttons.forEach((button, index) => {
         gsap.killTweensOf(button);
+        console.log('  ボタン' + (index + 1) + ' のアニメーションを停止');
     });
 
     // ボタンを初期位置に戻す
@@ -22,9 +37,17 @@ function stopAllButtonAnimations() {
         y: 0,
         rotation: 0,
         scale: 1,
-        opacity: 1,
-        clearProps: 'all'
+        opacity: 1
     });
+    console.log('  全ボタンを初期位置にリセット');
+
+    // 停止後の確認
+    buttons.forEach((button, index) => {
+        const tweensCountAfter = gsap.getTweensOf(button).length;
+        console.log('  ボタン' + (index + 1) + ' 停止後のアニメーション数:', tweensCountAfter);
+    });
+
+    console.log('✅ stopAllButtonAnimations 完了');
 }
 
 /**

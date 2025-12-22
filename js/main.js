@@ -189,7 +189,9 @@ function handleCorrectAnswer(button) {
     console.log('✅ 正解！ コンボ: ' + gameState.combo + ' → ' + (gameState.combo + 1));
 
     // Phase 3: 正解したらすぐにボタンの動きを停止
+    console.log('📍 handleCorrectAnswer: stopAllButtonAnimations を呼び出します');
     stopAllButtonAnimations();
+    console.log('📍 handleCorrectAnswer: stopAllButtonAnimations 呼び出し完了');
 
     // コンボ増加
     gameState.combo++;
@@ -252,7 +254,9 @@ function handleWrongAnswer(button) {
     console.log('❌ 不正解... コンボリセット！');
 
     // Phase 3: 不正解でもボタンの動きを停止
+    console.log('📍 handleWrongAnswer: stopAllButtonAnimations を呼び出します');
     stopAllButtonAnimations();
+    console.log('📍 handleWrongAnswer: stopAllButtonAnimations 呼び出し完了');
 
     // コンボリセット
     const oldCombo = gameState.combo;
