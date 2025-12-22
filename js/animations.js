@@ -626,7 +626,7 @@ function playCorrectEffect(button, combo) {
         createRainbowRing(x, y, 2);
 
     } else if (combo <= 10) {
-        // コンボ8-10: 超派手 + 波紋 + 画面シェイク
+        // コンボ8-10: 超派手 + 波紋 + 画面シェイク + テキスト
         gsap.to(button, {
             scale: 1.6,
             rotation: 720,
@@ -635,16 +635,19 @@ function playCorrectEffect(button, combo) {
             repeat: 1,
             ease: 'back.out(1.7)'
         });
-        createParticles(x, y, 60, 'large');
-        createSpiralParticles(x, y, 20);
+        createParticles(x, y, 70, 'large');
+        createSpiralParticles(x, y, 25);
+        createHeartParticles(x, y, 15);
         flashScreen(0.5);
         createRadialGlow(x, y);
         createRainbowRing(x, y, 3);
         createColorfulWaves(x, y);
-        shakeScreen(5);
+        createFloatingText(x, y, combo);
+        shakeScreen(6);
+        pulseBackground();
 
     } else if (combo <= 15) {
-        // コンボ11-15: 極派手 + 流れ星
+        // コンボ11-15: 極派手 + 流れ星 + 光の柱
         gsap.to(button, {
             scale: 1.7,
             rotation: 1080,
@@ -653,17 +656,22 @@ function playCorrectEffect(button, combo) {
             repeat: 1,
             ease: 'back.out(1.7)'
         });
-        createParticles(x, y, 75, 'star');
-        createSpiralParticles(x, y, 25);
-        flashScreen(0.65);
+        createParticles(x, y, 90, 'star');
+        createSpiralParticles(x, y, 30);
+        createHeartParticles(x, y, 20);
+        createStarBurst(x, y, 5);
+        flashScreen(0.7);
         createRadialGlow(x, y);
         createRainbowRing(x, y, 4);
         createColorfulWaves(x, y);
-        shakeScreen(8);
+        createLightPillar(x, y);
+        createFloatingText(x, y, combo);
+        shakeScreen(10);
+        pulseBackground();
         createShootingStars();
 
-    } else {
-        // コンボ16+: 最高レベル
+    } else if (combo <= 20) {
+        // コンボ16-20: 超最高レベル + レーザー + オーロラ
         gsap.to(button, {
             scale: 1.8,
             rotation: 1440,
@@ -672,16 +680,66 @@ function playCorrectEffect(button, combo) {
             repeat: 1,
             ease: 'back.out(1.7)'
         });
-        createParticles(x, y, 80, 'star');
-        createSpiralParticles(x, y, 30);
-        createExplosionParticles(x, y, 20);
-        flashScreen(0.8);
+        createParticles(x, y, 110, 'star');
+        createSpiralParticles(x, y, 35);
+        createHeartParticles(x, y, 25);
+        createExplosionParticles(x, y, 25);
+        createStarBurst(x, y, 7);
+        flashScreen(0.85);
         createRadialGlow(x, y);
         createRainbowRing(x, y, 5);
         createColorfulWaves(x, y);
-        shakeScreen(12);
+        createLightPillar(x, y);
+        createLaserBeams(x, y);
+        createFloatingText(x, y, combo);
+        shakeScreen(14);
+        pulseBackground();
+        zoomAndRotateScreen();
         createShootingStars();
         createFireworks();
+        createAurora();
+
+    } else {
+        // コンボ21+: 究極の派手さ - 全エフェクト同時発動！
+        gsap.to(button, {
+            scale: 2.0,
+            rotation: 1800,
+            duration: 0.6,
+            yoyo: true,
+            repeat: 1,
+            ease: 'back.out(1.7)'
+        });
+        // パーティクル大量発生
+        createParticles(x, y, 120, 'star');
+        createSpiralParticles(x, y, 40);
+        createHeartParticles(x, y, 30);
+        createExplosionParticles(x, y, 30);
+        createStarBurst(x, y, 10);
+
+        // フラッシュ・グロー系
+        flashScreen(0.9);
+        createRadialGlow(x, y);
+        createRainbowRing(x, y, 6);
+        createColorfulWaves(x, y);
+
+        // 光系エフェクト
+        createLightPillar(x, y);
+        createLaserBeams(x, y);
+        createAurora();
+
+        // テキスト・画面効果
+        createFloatingText(x, y, combo);
+        shakeScreen(18);
+        pulseBackground();
+        zoomAndRotateScreen();
+
+        // 特殊エフェクト
+        createShootingStars();
+        createFireworks();
+
+        // 追加の光の柱を複数箇所に
+        setTimeout(() => createLightPillar(x - 150, y), 200);
+        setTimeout(() => createLightPillar(x + 150, y), 400);
     }
 }
 
@@ -943,6 +1001,335 @@ function createFireworks() {
             createExplosionParticles(x, y, 30);
         }, i * 300);
     }
+}
+
+/**
+ * レーザービームエフェクト（Phase 2-B新規）
+ * @param {number} x - 中心X座標
+ * @param {number} y - 中心Y座標
+ */
+function createLaserBeams(x, y) {
+    const beamCount = 8;
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+
+    for (let i = 0; i < beamCount; i++) {
+        const angle = (i / beamCount) * Math.PI * 2;
+        const startX = x + Math.cos(angle) * 800;
+        const startY = y + Math.sin(angle) * 800;
+
+        const beam = document.createElement('div');
+        beam.style.position = 'fixed';
+        beam.style.left = startX + 'px';
+        beam.style.top = startY + 'px';
+        beam.style.width = '800px';
+        beam.style.height = '4px';
+        beam.style.background = `linear-gradient(to right, ${colors[i % colors.length]}, transparent)`;
+        beam.style.transformOrigin = 'left center';
+        beam.style.transform = `rotate(${angle + Math.PI}rad)`;
+        beam.style.pointerEvents = 'none';
+        beam.style.zIndex = '150';
+        beam.style.boxShadow = `0 0 20px ${colors[i % colors.length]}`;
+        document.body.appendChild(beam);
+
+        gsap.fromTo(beam,
+            { opacity: 0, scaleX: 0 },
+            {
+                opacity: 1,
+                scaleX: 1,
+                duration: 0.3,
+                ease: 'power2.out',
+                onComplete: () => {
+                    gsap.to(beam, {
+                        opacity: 0,
+                        duration: 0.3,
+                        onComplete: () => beam.remove()
+                    });
+                }
+            }
+        );
+    }
+}
+
+/**
+ * 浮遊テキストエフェクト（Phase 2-B新規）
+ * @param {number} x - X座標
+ * @param {number} y - Y座標
+ * @param {number} combo - コンボ数
+ */
+function createFloatingText(x, y, combo) {
+    const messages = [
+        { min: 5, text: 'GOOD!', color: '#4facfe', size: '40px' },
+        { min: 8, text: 'GREAT!', color: '#6bcf7f', size: '50px' },
+        { min: 11, text: 'EXCELLENT!', color: '#ffd93d', size: '60px' },
+        { min: 14, text: 'AMAZING!', color: '#ff6b6b', size: '70px' },
+        { min: 17, text: 'PERFECT!', color: '#f093fb', size: '80px' },
+        { min: 20, text: 'LEGENDARY!', color: '#fa709a', size: '90px' }
+    ];
+
+    let message = messages[0];
+    for (let i = messages.length - 1; i >= 0; i--) {
+        if (combo >= messages[i].min) {
+            message = messages[i];
+            break;
+        }
+    }
+
+    const text = document.createElement('div');
+    text.textContent = message.text;
+    text.style.position = 'fixed';
+    text.style.left = x + 'px';
+    text.style.top = y + 'px';
+    text.style.fontSize = message.size;
+    text.style.fontWeight = 'bold';
+    text.style.color = message.color;
+    text.style.textShadow = `0 0 20px ${message.color}, 0 0 40px ${message.color}`;
+    text.style.transform = 'translate(-50%, -50%)';
+    text.style.pointerEvents = 'none';
+    text.style.zIndex = '200';
+    text.style.fontFamily = 'Arial, sans-serif';
+    text.style.webkitTextStroke = '2px white';
+    document.body.appendChild(text);
+
+    gsap.fromTo(text,
+        { scale: 0, rotation: -180, opacity: 0 },
+        {
+            scale: 1.5,
+            rotation: 0,
+            opacity: 1,
+            y: -100,
+            duration: 0.8,
+            ease: 'back.out(1.7)',
+            onComplete: () => {
+                gsap.to(text, {
+                    opacity: 0,
+                    y: -150,
+                    duration: 0.5,
+                    onComplete: () => text.remove()
+                });
+            }
+        }
+    );
+}
+
+/**
+ * オーロラエフェクト（Phase 2-B新規）
+ */
+function createAurora() {
+    const colors = [
+        'rgba(0, 255, 127, 0.3)',
+        'rgba(0, 191, 255, 0.3)',
+        'rgba(138, 43, 226, 0.3)',
+        'rgba(255, 20, 147, 0.3)'
+    ];
+
+    for (let i = 0; i < 4; i++) {
+        const aurora = document.createElement('div');
+        aurora.style.position = 'fixed';
+        aurora.style.left = (i * 30 - 10) + '%';
+        aurora.style.top = '-50px';
+        aurora.style.width = '40%';
+        aurora.style.height = '300px';
+        aurora.style.background = `linear-gradient(to bottom, ${colors[i]}, transparent)`;
+        aurora.style.pointerEvents = 'none';
+        aurora.style.zIndex = '140';
+        aurora.style.filter = 'blur(20px)';
+        aurora.style.transform = 'skewX(-20deg)';
+        document.body.appendChild(aurora);
+
+        gsap.fromTo(aurora,
+            { opacity: 0, y: -100 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: 'power1.out',
+                onComplete: () => {
+                    gsap.to(aurora, {
+                        opacity: 0,
+                        y: 100,
+                        duration: 1.5,
+                        ease: 'power1.in',
+                        onComplete: () => aurora.remove()
+                    });
+                }
+            }
+        );
+
+        // 揺らめき効果
+        gsap.to(aurora, {
+            x: gsap.utils.random(-30, 30),
+            skewX: gsap.utils.random(-30, -10),
+            duration: 2,
+            repeat: 2,
+            yoyo: true,
+            ease: 'sine.inOut'
+        });
+    }
+}
+
+/**
+ * 光の柱エフェクト（Phase 2-B新規）
+ * @param {number} x - X座標
+ * @param {number} y - Y座標
+ */
+function createLightPillar(x, y) {
+    const pillar = document.createElement('div');
+    pillar.style.position = 'fixed';
+    pillar.style.left = x + 'px';
+    pillar.style.top = window.innerHeight + 'px';
+    pillar.style.width = '100px';
+    pillar.style.height = window.innerHeight + 'px';
+    pillar.style.background = 'linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 217, 61, 0.4), transparent)';
+    pillar.style.transform = 'translateX(-50%)';
+    pillar.style.pointerEvents = 'none';
+    pillar.style.zIndex = '145';
+    pillar.style.filter = 'blur(15px)';
+    pillar.style.boxShadow = '0 0 50px rgba(255, 217, 61, 0.8)';
+    document.body.appendChild(pillar);
+
+    gsap.fromTo(pillar,
+        { y: 0, opacity: 0 },
+        {
+            y: -window.innerHeight,
+            opacity: 1,
+            duration: 0.6,
+            ease: 'power2.out',
+            onComplete: () => {
+                gsap.to(pillar, {
+                    opacity: 0,
+                    duration: 0.4,
+                    onComplete: () => pillar.remove()
+                });
+            }
+        }
+    );
+}
+
+/**
+ * 背景パルスエフェクト（Phase 2-B新規）
+ */
+function pulseBackground() {
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.background = 'radial-gradient(circle, rgba(255,217,61,0.3), rgba(79,172,254,0.3), rgba(240,147,251,0.3))';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.zIndex = '135';
+    document.body.appendChild(overlay);
+
+    gsap.fromTo(overlay,
+        { opacity: 0, scale: 0.8 },
+        {
+            opacity: 1,
+            scale: 1.2,
+            duration: 0.5,
+            yoyo: true,
+            repeat: 1,
+            ease: 'power2.inOut',
+            onComplete: () => overlay.remove()
+        }
+    );
+}
+
+/**
+ * ハート型軌道パーティクル（Phase 2-B新規）
+ * @param {number} x - X座標
+ * @param {number} y - Y座標
+ * @param {number} count - パーティクル数
+ */
+function createHeartParticles(x, y, count) {
+    const container = document.getElementById('particleContainer');
+    const colors = ['#ff1744', '#f50057', '#ff4081', '#ff6b9d'];
+
+    for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.width = '12px';
+        particle.style.height = '12px';
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.borderRadius = '50%';
+        particle.style.boxShadow = '0 0 10px currentColor';
+        container.appendChild(particle);
+
+        // ハート型の軌道（パラメトリック方程式）
+        const t = (i / count) * Math.PI * 2;
+        const scale = 80;
+        const heartX = scale * 16 * Math.pow(Math.sin(t), 3);
+        const heartY = -scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+
+        gsap.to(particle, {
+            x: heartX,
+            y: heartY,
+            opacity: 0,
+            scale: 0,
+            duration: 1.5,
+            ease: 'power1.out',
+            onComplete: () => particle.remove()
+        });
+    }
+}
+
+/**
+ * 星型爆発エフェクト（Phase 2-B新規）
+ * @param {number} x - X座標
+ * @param {number} y - Y座標
+ * @param {number} points - 星の頂点数
+ */
+function createStarBurst(x, y, points = 5) {
+    const container = document.getElementById('particleContainer');
+    const colors = ['#ffd93d', '#ffeb3b', '#fff176', '#ffffff'];
+
+    for (let i = 0; i < points * 2; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.width = '25px';
+        particle.style.height = '25px';
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.borderRadius = '50%';
+        particle.style.boxShadow = '0 0 20px #ffd93d';
+        container.appendChild(particle);
+
+        // 星型の頂点に配置
+        const angle = (i / (points * 2)) * Math.PI * 2;
+        const radius = (i % 2 === 0) ? 200 : 120; // 外側と内側を交互に
+
+        gsap.to(particle, {
+            x: Math.cos(angle) * radius,
+            y: Math.sin(angle) * radius,
+            opacity: 0,
+            scale: 0,
+            rotation: 720,
+            duration: 1.2,
+            ease: 'power2.out',
+            onComplete: () => particle.remove()
+        });
+    }
+}
+
+/**
+ * 画面ズーム＋回転エフェクト（Phase 2-B新規）
+ */
+function zoomAndRotateScreen() {
+    const gameArea = document.querySelector('.game-container') || document.body;
+
+    gsap.to(gameArea, {
+        scale: 1.05,
+        rotation: 5,
+        duration: 0.3,
+        yoyo: true,
+        repeat: 1,
+        ease: 'power2.inOut',
+        onComplete: () => {
+            gsap.set(gameArea, { scale: 1, rotation: 0 });
+        }
+    });
 }
 
 /**
