@@ -31,7 +31,7 @@ function initGame() {
     gameState.score = 0;
     gameState.combo = 0;
     gameState.exp = 0;
-    gameState.maxExp = 10;
+    gameState.maxExp = 6; // Phase 3: 初期値を調整 (10 → 6)
 
     // UI更新
     updateUI();
@@ -196,9 +196,10 @@ function handleCorrectAnswer(button) {
     gameState.score += scoreGain;
     console.log('💰 スコア +' + scoreGain + ' (合計: ' + gameState.score + ')');
 
-    // 経験値増加
-    gameState.exp += gameConfig.expPerCorrect;
-    console.log('⭐ 経験値 +' + gameConfig.expPerCorrect + ' (' + gameState.exp + '/' + gameState.maxExp + ')');
+    // 経験値増加（Phase 3: コンボボーナス追加）
+    const expGain = calculateExpGain(gameState.combo);
+    gameState.exp += expGain;
+    console.log('⭐ 経験値 +' + expGain + ' (コンボ' + gameState.combo + 'ボーナス) (' + gameState.exp + '/' + gameState.maxExp + ')');
 
     // エフェクト再生
     playCorrectEffect(button, gameState.combo);
@@ -222,6 +223,22 @@ function handleCorrectAnswer(button) {
             generateQuestion();
         }
     }, 1500);
+}
+
+/**
+ * コンボ数に応じた経験値を計算（Phase 3新規）
+ * @param {number} combo - 現在のコンボ数
+ * @returns {number} - 獲得経験値
+ */
+function calculateExpGain(combo) {
+    if (combo === 1) return 1;
+    if (combo <= 3) return 2;
+    if (combo <= 5) return 3;
+    if (combo <= 8) return 4;
+    if (combo <= 12) return 5;
+    if (combo <= 16) return 6;
+    if (combo <= 20) return 7;
+    return 8; // コンボ21+
 }
 
 /**
@@ -260,8 +277,9 @@ function levelUp() {
     // 経験値リセット
     gameState.exp = 0;
 
-    // 次のレベルに必要な経験値を増加
-    gameState.maxExp = Math.floor(10 + gameState.level * 2);
+    // 次のレベルに必要な経験値を増加（Phase 3: 大幅削減）
+    gameState.maxExp = Math.floor(6 + gameState.level * 0.8);
+    console.log('📊 次のレベルアップまで: ' + gameState.maxExp + '経験値');
 
     // レベルアップエフェクト
     playLevelUpEffect();
@@ -374,7 +392,7 @@ function initDebugPanel() {
 
             // レベルを即座に変更
             gameState.level = targetLevel;
-            gameState.maxExp = Math.floor(10 + gameState.level * 2);
+            gameState.maxExp = Math.floor(6 + gameState.level * 0.8); // Phase 3: 計算式を統一
 
             // UI更新
             updateUI();
