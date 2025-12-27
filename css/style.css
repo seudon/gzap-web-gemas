@@ -953,3 +953,81 @@ body {
 .hidden {
     display: none !important;
 }
+
+/* ========================================
+   レスポンシブ対応: ゲームクリア画面
+   ======================================== */
+/* タブレット・スマホ対応 */
+@media (max-width: 768px) {
+    .complete-title {
+        font-size: 2.5rem;
+    }
+
+    .complete-message {
+        font-size: 1.3rem;
+        line-height: 1.4;
+        margin-bottom: 15px;
+    }
+
+    .complete-score {
+        font-size: 1.5rem;
+        line-height: 1.5;
+        margin-bottom: 30px;
+        max-height: 250px;
+        overflow-y: auto;
+        padding: 10px;
+        /* スクロールバーのスタイリング */
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 217, 61, 0.5) transparent;
+    }
+
+    /* Webkitブラウザ用スクロールバー */
+    .complete-score::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .complete-score::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .complete-score::-webkit-scrollbar-thumb {
+        background: rgba(255, 217, 61, 0.5);
+        border-radius: 4px;
+    }
+
+    .complete-score::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 217, 61, 0.8);
+    }
+
+    .restart-button {
+        padding: 15px 30px;
+        font-size: 1.2rem;
+    }
+}
+
+/* 小型スマホ対応 */
+@media (max-width: 480px) {
+    .complete-title {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    .complete-message {
+        font-size: 1.1rem;
+        line-height: 1.3;
+        margin-bottom: 10px;
+    }
+
+    .complete-score {
+        font-size: 1.2rem;
+        line-height: 1.4;
+        margin-bottom: 20px;
+        max-height: 180px;
+        padding: 8px;
+    }
+
+    .restart-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+}
