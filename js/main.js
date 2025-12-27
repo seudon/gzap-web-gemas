@@ -41,6 +41,27 @@ const timerState = {
     animationId: null   // requestAnimationFrameのID
 };
 
+// 必殺技状態管理
+const specialMoveState = {
+    gauge: 0,           // 必殺技ゲージ（0-100）
+    maxGauge: 100,      // 最大ゲージ
+    active: {           // 各必殺技の発動状態
+        timeStop: false,
+        slowMotion: false,
+        hint: false
+    },
+    cooldown: {         // クールダウン時間（ミリ秒）
+        timeStop: 5000,     // 時間停止は5秒間
+        slowMotion: 8000,   // スローモーションは8秒間
+        hint: 0             // ヒントは即座に消費
+    },
+    cooldownTimers: {   // クールダウンタイマーID
+        timeStop: null,
+        slowMotion: null,
+        hint: null
+    }
+};
+
 /**
  * ゲーム初期化
  */

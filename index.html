@@ -108,6 +108,39 @@
 
         <!-- フッター（オプション） -->
         <footer class="game-footer">
+            <!-- 必殺技システム -->
+            <div class="special-moves-container">
+                <!-- 必殺技ゲージ -->
+                <div class="special-gauge-container">
+                    <span class="special-gauge-label">⚡ 必殺技ゲージ</span>
+                    <div class="special-gauge-wrapper">
+                        <div id="specialGauge" class="special-gauge">
+                            <div class="special-gauge-fill"></div>
+                        </div>
+                        <span id="specialGaugeText" class="special-gauge-text">0%</span>
+                    </div>
+                </div>
+
+                <!-- 必殺技ボタン -->
+                <div class="special-buttons">
+                    <button id="timeStopBtn" class="special-btn" data-move="timeStop" disabled>
+                        <span class="special-icon">⏸️</span>
+                        <span class="special-name">時間停止</span>
+                        <span class="special-cost">消費: 40</span>
+                    </button>
+                    <button id="slowMotionBtn" class="special-btn" data-move="slowMotion" disabled>
+                        <span class="special-icon">🐌</span>
+                        <span class="special-name">スロー</span>
+                        <span class="special-cost">消費: 30</span>
+                    </button>
+                    <button id="hintBtn" class="special-btn" data-move="hint" disabled>
+                        <span class="special-icon">💡</span>
+                        <span class="special-name">ヒント</span>
+                        <span class="special-cost">消費: 20</span>
+                    </button>
+                </div>
+            </div>
+
             <p class="game-tip" id="gameTip">正解すると星が増えるよ！</p>
         </footer>
 
