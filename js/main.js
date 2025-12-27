@@ -52,7 +52,7 @@ const specialMoveState = {
         hint: false
     },
     cooldown: {         // クールダウン時間（ミリ秒）
-        timeStop: 5000,     // 時間停止は5秒間
+        timeStop: 10000,    // 時間停止は10秒間
         slowMotion: 8000,   // スローモーションは8秒間
         hint: 0             // ヒントは即座に消費
     },
@@ -801,19 +801,19 @@ function updateSpecialButtons() {
     const slowMotionBtn = document.getElementById('slowMotionBtn');
     const hintBtn = document.getElementById('hintBtn');
 
-    // 時間停止: 40以上で使用可能
+    // 時間停止: 20以上で使用可能
     if (timeStopBtn) {
-        timeStopBtn.disabled = specialMoveState.gauge < 40 || specialMoveState.active.timeStop;
+        timeStopBtn.disabled = specialMoveState.gauge < 20 || specialMoveState.active.timeStop;
     }
 
-    // スローモーション: 30以上で使用可能
+    // スローモーション: 15以上で使用可能
     if (slowMotionBtn) {
-        slowMotionBtn.disabled = specialMoveState.gauge < 30 || specialMoveState.active.slowMotion;
+        slowMotionBtn.disabled = specialMoveState.gauge < 15 || specialMoveState.active.slowMotion;
     }
 
-    // ヒント: 20以上で使用可能
+    // ヒント: 5以上で使用可能
     if (hintBtn) {
-        hintBtn.disabled = specialMoveState.gauge < 20 || specialMoveState.active.hint;
+        hintBtn.disabled = specialMoveState.gauge < 5 || specialMoveState.active.hint;
     }
 }
 
@@ -845,6 +845,55 @@ function playGaugeFullEffect() {
         });
 
     if (DEBUG_MODE) console.log('⚡⚡⚡ ゲージMAX！必殺技使用可能！');
+}
+
+/**
+ * 必殺技名を画面いっぱいに表示
+ * @param {string} moveName - 必殺技名
+ * @param {string} color - テキストカラー
+ */
+function showSpecialMoveName(moveName, color) {
+    const nameDisplay = document.createElement('div');
+    nameDisplay.className = 'special-move-name-display';
+    nameDisplay.textContent = moveName;
+    nameDisplay.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 8rem;
+        font-weight: bold;
+        color: ${color};
+        text-shadow: 0 0 40px ${color}, 0 0 80px ${color}, 0 0 120px ${color};
+        z-index: 10000;
+        text-align: center;
+        pointer-events: none;
+        white-space: nowrap;
+        letter-spacing: 0.5rem;
+    `;
+    document.body.appendChild(nameDisplay);
+
+    // 派手な登場アニメーション
+    gsap.fromTo(nameDisplay,
+        { scale: 0, rotation: -10, opacity: 0 },
+        {
+            scale: 1,
+            rotation: 0,
+            opacity: 1,
+            duration: 0.3,
+            ease: 'back.out(2)'
+        }
+    );
+
+    // 1秒後にフェードアウト
+    gsap.to(nameDisplay, {
+        scale: 1.2,
+        opacity: 0,
+        duration: 0.5,
+        delay: 1,
+        ease: 'power2.in',
+        onComplete: () => nameDisplay.remove()
+    });
 }
 
 /**
@@ -889,7 +938,7 @@ function activateSpecialMove(moveType, cost, activateFunc) {
  * ⏸️ 時間停止 発動
  */
 function activateTimeStop() {
-    activateSpecialMove('timeStop', 40, () => {
+    activateSpecialMove('timeStop', 20, () => {
         // ド派手な発動エフェクト
         const gameMain = document.querySelector('.game-main');
 
@@ -904,42 +953,16 @@ function activateTimeStop() {
                 duration: 0.3
             });
 
-        // 時間停止エフェクト（時計アイコンを表示）
-        const timeStopIcon = document.createElement('div');
-        timeStopIcon.className = 'special-effect-icon';
-        timeStopIcon.innerHTML = '⏸️<br><span style="font-size: 1.5rem;">TIME STOP</span>';
-        timeStopIcon.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 5rem;
-            color: #00d4ff;
-            text-shadow: 0 0 30px #00d4ff, 0 0 60px #00d4ff;
-            z-index: 9999;
-            text-align: center;
-            pointer-events: none;
-        `;
-        document.body.appendChild(timeStopIcon);
-
-        gsap.fromTo(timeStopIcon,
-            { scale: 0, rotation: -180, opacity: 0 },
-            { scale: 1, rotation: 0, opacity: 1, duration: 0.5, ease: 'back.out(2)' }
-        );
+        // 必殺技名を画面いっぱいに表示（1秒で消える）
+        showSpecialMoveName('ザ・ワールド！！', '#00d4ff');
 
         // タイマーを一時停止
         pauseTimer();
 
-        // 5秒後に解除
+        // 10秒後に解除
         specialMoveState.cooldownTimers.timeStop = setTimeout(() => {
             deactivateTimeStop();
-            gsap.to(timeStopIcon, {
-                scale: 0,
-                opacity: 0,
-                duration: 0.3,
-                onComplete: () => timeStopIcon.remove()
-            });
-        }, 5000);
+        }, 10000);
     });
 }
 
@@ -965,7 +988,7 @@ function deactivateTimeStop() {
  * 🐌 スローモーション 発動
  */
 function activateSlowMotion() {
-    activateSpecialMove('slowMotion', 30, () => {
+    activateSpecialMove('slowMotion', 15, () => {
         // ド派手な発動エフェクト
         const gameMain = document.querySelector('.game-main');
 
@@ -980,28 +1003,8 @@ function activateSlowMotion() {
                 duration: 0.3
             });
 
-        // スローモーションアイコン表示
-        const slowIcon = document.createElement('div');
-        slowIcon.className = 'special-effect-icon';
-        slowIcon.innerHTML = '🐌<br><span style="font-size: 1.5rem;">SLOW MOTION</span>';
-        slowIcon.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 5rem;
-            color: #9b59b6;
-            text-shadow: 0 0 30px #9b59b6, 0 0 60px #9b59b6;
-            z-index: 9999;
-            text-align: center;
-            pointer-events: none;
-        `;
-        document.body.appendChild(slowIcon);
-
-        gsap.fromTo(slowIcon,
-            { scale: 0, y: -100, opacity: 0 },
-            { scale: 1, y: 0, opacity: 1, duration: 0.6, ease: 'elastic.out(1, 0.5)' }
-        );
+        // 必殺技名を画面いっぱいに表示（1秒で消える）
+        showSpecialMoveName('時の加速', '#9b59b6');
 
         // GSAPのグローバルタイムスケールを遅くする
         gsap.globalTimeline.timeScale(0.3);
@@ -1009,12 +1012,6 @@ function activateSlowMotion() {
         // 8秒後に解除
         specialMoveState.cooldownTimers.slowMotion = setTimeout(() => {
             deactivateSlowMotion();
-            gsap.to(slowIcon, {
-                scale: 0,
-                opacity: 0,
-                duration: 0.3,
-                onComplete: () => slowIcon.remove()
-            });
         }, 8000);
     });
 }
@@ -1041,7 +1038,7 @@ function deactivateSlowMotion() {
  * 💡 ヒント 発動
  */
 function activateHint() {
-    activateSpecialMove('hint', 20, () => {
+    activateSpecialMove('hint', 5, () => {
         // ド派手な発動エフェクト
         const gameMain = document.querySelector('.game-main');
 
@@ -1055,6 +1052,9 @@ function activateHint() {
                 backgroundColor: 'transparent',
                 duration: 0.3
             });
+
+        // 必殺技名を画面いっぱいに表示（1秒で消える）
+        showSpecialMoveName('星の啓示', '#ffd700');
 
         // 正解ボタンを探す
         const correctAnswer = gameState.currentQuestion.answer;
@@ -1102,13 +1102,16 @@ function activateHint() {
             }
         }
 
-        // ヒントは即座に終了
+        // ヒントは即座に終了（エフェクト終了後にリセット）
         setTimeout(() => {
             specialMoveState.active.hint = false;
             const button = document.getElementById('hintBtn');
-            if (button) button.classList.remove('active');
+            if (button) {
+                button.classList.remove('active');
+            }
             updateSpecialButtons();
-        }, 100);
+            if (DEBUG_MODE) console.log('💡 ヒント終了 - ボタンリセット完了');
+        }, 2000);  // グローエフェクトが完全に終わるまで待つ
     });
 }
 

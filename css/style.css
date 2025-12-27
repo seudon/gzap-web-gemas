@@ -717,17 +717,20 @@ body {
 }
 
 .special-btn.active {
-    background: linear-gradient(135deg, #6bcf7f 0%, #4ade80 100%);
-    box-shadow: 0 4px 15px rgba(107, 207, 127, 0.6);
-    animation: specialActive 1s ease-in-out infinite;
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8);
+    animation: specialActive 0.8s ease-in-out infinite;
+    border-color: rgba(255, 215, 0, 1);
+    transform: scale(1.05);
 }
 
 @keyframes specialActive {
     0%, 100% {
-        box-shadow: 0 4px 15px rgba(107, 207, 127, 0.6);
+        box-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8);
     }
     50% {
-        box-shadow: 0 4px 25px rgba(107, 207, 127, 0.9);
+        box-shadow: 0 0 50px rgba(255, 215, 0, 1), 0 0 90px rgba(255, 140, 0, 1);
+        transform: scale(1.08);
     }
 }
 
