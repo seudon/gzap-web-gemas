@@ -683,7 +683,13 @@ function updateTimer() {
     if (!timerState.isRunning || timerState.isPaused) return;
 
     const now = performance.now();
-    const elapsed = now - timerState.startTimestamp;
+    let elapsed = now - timerState.startTimestamp;
+
+    // スローモーション中は時間の進み方を0.3倍速に
+    if (specialMoveState.active.slowMotion) {
+        elapsed *= 0.3;
+    }
+
     timerState.currentTime = Math.max(0, timerState.pausedTime > 0 ? timerState.pausedTime - elapsed : timerState.maxTime - elapsed);
 
     // UI更新
@@ -956,9 +962,15 @@ function activateTimeStop() {
         // 必殺技名を画面いっぱいに表示（1秒で消える）
         showSpecialMoveName('ザ・ワールド！！', '#00d4ff');
 
+        // サウンド再生
+        playTimeStopSound();
+
         // タイマーとボタンアニメーションを一時停止
         pauseTimer();
         pauseButtonAnimations();
+
+        // BGMを停止
+        stopAllBGM();
 
         // 10秒後に解除
         specialMoveState.cooldownTimers.timeStop = setTimeout(() => {
@@ -981,6 +993,11 @@ function deactivateTimeStop() {
     // タイマーとボタンアニメーションを再開
     resumeTimer();
     resumeButtonAnimations();
+
+    // BGMを再開（レベルに応じて）
+    if (gameState.level >= 11) {
+        playLv11_20BGM();
+    }
 
     if (DEBUG_MODE) console.log('⏸️ 時間停止 解除');
     updateSpecialButtons();
@@ -1008,6 +1025,13 @@ function activateSlowMotion() {
         // 必殺技名を画面いっぱいに表示（1秒で消える）
         showSpecialMoveName('時の加速', '#9b59b6');
 
+        // サウンド再生
+        playSlowMotionSound();
+
+        // 通常BGMを停止してスローモーション用BGMに切り替え
+        stopAllBGM();
+        playSlowMotionBGM();
+
         // GSAPのグローバルタイムスケールを遅くする
         gsap.globalTimeline.timeScale(0.3);
 
@@ -1031,6 +1055,12 @@ function deactivateSlowMotion() {
 
     // タイムスケールを戻す
     gsap.globalTimeline.timeScale(1);
+
+    // スローモーションBGMを停止して通常BGMに戻す
+    stopSlowMotionBGM();
+    if (gameState.level >= 11) {
+        playLv11_20BGM();
+    }
 
     if (DEBUG_MODE) console.log('🐌 スローモーション 解除');
     updateSpecialButtons();
@@ -1057,6 +1087,9 @@ function activateHint() {
 
         // 必殺技名を画面いっぱいに表示（1秒で消える）
         showSpecialMoveName('星の啓示', '#ffd700');
+
+        // サウンド再生
+        playHintSound();
 
         // 正解ボタンを探す
         const correctAnswer = gameState.currentQuestion.answer;
