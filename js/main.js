@@ -4,7 +4,7 @@
 
 // 🛠️ 開発モード（デバッグログとデバッグパネルの表示制御）
 // 本番環境では false、開発時は true に変更してください
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 
 // ゲーム状態管理
 const gameState = {
@@ -579,8 +579,11 @@ function initDrumButtons() {
 
     drumButtons.forEach(button => {
         button.addEventListener('click', () => {
-            // ドラムサウンドを再生（ランダム）
-            playButtonSound();
+            // ボタン番号を取得（1～4）
+            const buttonNumber = parseInt(button.dataset.drum);
+
+            // ドラムサウンドを再生（ボタンごとに異なるグループ）
+            playDrumSound(buttonNumber);
 
             // Lv1相当のエフェクト（軽めのパーティクル）
             const buttonRect = button.getBoundingClientRect();
@@ -604,8 +607,6 @@ function initDrumButtons() {
                     duration: 0.2,
                     ease: 'elastic.out(1, 0.3)'
                 });
-
-            if (DEBUG_MODE) console.log('🥁 ドラム演奏！');
         });
     });
 }

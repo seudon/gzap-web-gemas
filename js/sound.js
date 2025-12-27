@@ -46,8 +46,8 @@ const soundPaths = {
     }
 };
 
-// button-*.mp3 ファイルを動的に登録
-for (let i = 1; i <= 6; i++) {
+// button-*.mp3 ファイルを動的に登録（8個）
+for (let i = 1; i <= 8; i++) {
     const filename = `sounds/effect/button-${String(i).padStart(3, '0')}.mp3`;
     soundPaths.effect.button.push(filename);
 }
@@ -308,6 +308,43 @@ function playButtonSound() {
     const buttonSounds = audioCache.effect.button;
     const randomIndex = Math.floor(Math.random() * buttonSounds.length);
     playEffect(buttonSounds[randomIndex]);
+}
+
+/**
+ * エンディングドラムボタン音を再生（ボタンごとに異なるグループ）
+ * @param {number} buttonNumber - ボタン番号（1～4）
+ */
+function playDrumSound(buttonNumber) {
+    if (!soundConfig.enabled) return;
+
+    const buttonSounds = audioCache.effect.button;
+    let soundGroup = [];
+
+    switch(buttonNumber) {
+        case 1:
+            // button-001, 002, 003
+            soundGroup = [0, 1, 2];
+            break;
+        case 2:
+            // button-004, 005
+            soundGroup = [3, 4];
+            break;
+        case 3:
+            // button-006, 007, 008
+            soundGroup = [5, 6, 7];
+            break;
+        case 4:
+            // button-001 ~ 008 (all)
+            soundGroup = [0, 1, 2, 3, 4, 5, 6, 7];
+            break;
+        default:
+            soundGroup = [0, 1, 2, 3, 4, 5, 6, 7];
+    }
+
+    const randomIndex = soundGroup[Math.floor(Math.random() * soundGroup.length)];
+    playEffect(buttonSounds[randomIndex]);
+
+    if (DEBUG_MODE) console.log(`🥁 ドラムボタン${buttonNumber}: button-${String(randomIndex + 1).padStart(3, '0')}.mp3`);
 }
 
 /**
