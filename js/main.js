@@ -515,15 +515,22 @@ function updateDebugPanel() {
 function initSettingsPanel() {
     if (DEBUG_MODE) console.log('🔊 設定パネル初期化');
 
-    // 表示/非表示トグル
-    const toggleButton = document.getElementById('toggleSettings');
-    const settingsContent = document.querySelector('.settings-content');
-    let isVisible = true;
+    const openButton = document.getElementById('openSettings');
+    const closeButton = document.getElementById('closeSettings');
+    const settingsPanel = document.getElementById('settingsPanel');
 
-    toggleButton.addEventListener('click', () => {
-        isVisible = !isVisible;
-        settingsContent.classList.toggle('hidden');
-        if (DEBUG_MODE) console.log('設定パネル:', isVisible ? '表示' : '非表示');
+    // 開くボタン
+    openButton.addEventListener('click', () => {
+        settingsPanel.classList.remove('hidden');
+        openButton.style.display = 'none';
+        if (DEBUG_MODE) console.log('設定パネル: 表示');
+    });
+
+    // 閉じるボタン
+    closeButton.addEventListener('click', () => {
+        settingsPanel.classList.add('hidden');
+        openButton.style.display = 'flex';
+        if (DEBUG_MODE) console.log('設定パネル: 非表示');
     });
 
     // サウンドON/OFFボタン

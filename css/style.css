@@ -677,6 +677,33 @@ body {
 /* ========================================
    設定パネル
    ======================================== */
+/* 設定アイコンボタン */
+.settings-icon-btn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #6bcf7f;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+.settings-icon-btn:hover {
+    background: rgba(107, 207, 127, 0.2);
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(107, 207, 127, 0.5);
+}
+
+/* 設定パネル本体 */
 .settings-panel {
     position: fixed;
     top: 10px;
@@ -688,6 +715,10 @@ body {
     z-index: 1000;
     max-width: 350px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.settings-panel.hidden {
+    display: none;
 }
 
 .settings-header {
@@ -705,26 +736,30 @@ body {
     font-size: 1.2rem;
 }
 
-.settings-toggle {
-    padding: 5px 10px;
-    background: #667eea;
+.settings-close {
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    background: #ff6b6b;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 1.5rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
 }
 
-.settings-toggle:hover {
-    background: #764ba2;
+.settings-close:hover {
+    background: #ff5252;
+    transform: scale(1.1);
 }
 
 .settings-content {
     display: block;
-}
-
-.settings-content.hidden {
-    display: none;
 }
 
 .settings-section {
