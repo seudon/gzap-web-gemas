@@ -896,7 +896,7 @@ function showSpecialMoveName(moveName, color) {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-size: 8rem;
+        font-size: clamp(3rem, 15vw, 8rem);
         font-weight: bold;
         color: ${color};
         text-shadow: 0 0 40px ${color}, 0 0 80px ${color}, 0 0 120px ${color};
@@ -906,6 +906,9 @@ function showSpecialMoveName(moveName, color) {
         pointer-events: none;
         white-space: nowrap;
         letter-spacing: 0.5rem;
+        max-width: 95vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
     `;
     document.body.appendChild(nameDisplay);
 
