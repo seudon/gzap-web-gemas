@@ -12,12 +12,14 @@ body {
     overflow: hidden;
     width: 100vw;
     height: 100vh;
-    /* 宇宙背景のグラデーション */
-    background: linear-gradient(135deg,
-        #0f0c29 0%,
-        #302b63 50%,
-        #24243e 100%
-    );
+    /* 宇宙背景画像 */
+    background-image: url('../images/bg-space.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* フォールバック用グラデーション */
+    background-color: #0f0c29;
     color: #ffffff;
 }
 
