@@ -896,7 +896,7 @@ function showSpecialMoveName(moveName, color) {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-size: clamp(3rem, 15vw, 8rem);
+        font-size: clamp(2.5rem, 11vw, 8rem);
         font-weight: bold;
         color: ${color};
         text-shadow: 0 0 40px ${color}, 0 0 80px ${color}, 0 0 120px ${color};
@@ -905,10 +905,8 @@ function showSpecialMoveName(moveName, color) {
         text-align: center;
         pointer-events: none;
         white-space: nowrap;
-        letter-spacing: 0.5rem;
+        letter-spacing: clamp(0.1rem, 0.3vw, 0.5rem);
         max-width: 95vw;
-        overflow: hidden;
-        text-overflow: ellipsis;
     `;
     document.body.appendChild(nameDisplay);
 
@@ -1018,8 +1016,8 @@ function resetSpecialMove(moveType) {
             // タイマーとボタンアニメーションを再開
             resumeTimer();
             resumeButtonAnimations();
-            // BGMを再開（レベルに応じて）
-            restoreBGM();
+            // BGMを停止位置から再開
+            resumeCurrentBGM();
             break;
 
         case 'slowMotion':
@@ -1052,8 +1050,15 @@ function restoreBGM() {
     // 他の必殺技が発動中でない場合のみBGMを再開
     if (!specialMoveState.active.timeStop && !specialMoveState.active.slowMotion) {
         // レベルに応じたBGMを再生
-        if (gameState.level >= 11) {
-            // Lv11以上の場合、BGMが再生中かチェック
+        if (gameState.level <= 10) {
+            // Lv1-10の場合、opening BGMを再生
+            const openingBGM = audioCache.bgm.opening;
+            if (openingBGM && openingBGM.paused) {
+                playBGM('opening');
+                if (DEBUG_MODE) console.log('🎵 BGM再開 (opening)');
+            }
+        } else if (gameState.level <= 20) {
+            // Lv11-20の場合、Lv11-20 BGMを再生
             const lv11_20BGMs = audioCache.bgm.lv11_20;
             const isAnyBGMPlaying = lv11_20BGMs.some(bgm => !bgm.paused);
 
@@ -1062,7 +1067,6 @@ function restoreBGM() {
                 if (DEBUG_MODE) console.log('🎵 BGM再開 (Lv11-20)');
             }
         }
-        // Lv1-10ではBGMなし
     }
 }
 
@@ -1095,8 +1099,8 @@ function activateTimeStop() {
         pauseTimer();
         pauseButtonAnimations();
 
-        // BGMを停止
-        stopAllBGM();
+        // BGMを一時停止（再生位置を保持）
+        pauseCurrentBGM();
 
         // 10秒後に解除
         specialMoveState.cooldownTimers.timeStop = setTimeout(() => {

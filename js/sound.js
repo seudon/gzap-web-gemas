@@ -301,6 +301,28 @@ function stopAllBGM() {
 }
 
 /**
+ * 現在のBGMを一時停止（時間停止用、再生位置を保持）
+ */
+function pauseCurrentBGM() {
+    if (soundConfig.currentBGM && !soundConfig.currentBGM.paused) {
+        soundConfig.currentBGM.pause();
+        if (DEBUG_MODE) console.log('⏸️ BGM一時停止（位置保持）');
+    }
+}
+
+/**
+ * 現在のBGMを再開（時間停止解除用）
+ */
+function resumeCurrentBGM() {
+    if (soundConfig.currentBGM && soundConfig.currentBGM.paused) {
+        soundConfig.currentBGM.play().catch(err => {
+            console.warn('BGM再開エラー:', err);
+        });
+        if (DEBUG_MODE) console.log('▶️ BGM再開（続きから）');
+    }
+}
+
+/**
  * レベルアップ時のBGM切り替え
  * @param {number} newLevel - 新しいレベル
  */
