@@ -467,12 +467,49 @@ body {
 /* ========================================
    レスポンシブ対応
    ======================================== */
+
+/* デフォルト: 完全表記を表示 */
+.stat-label-short {
+    display: none;
+}
+
+/* タブレット・スマホ対応 */
 @media (max-width: 768px) {
+    /* ヘッダーのステータス表示を省略表記に切り替え */
+    .stat-label-full {
+        display: none;
+    }
+
+    .stat-label-short {
+        display: inline;
+    }
+
+    .stat-item {
+        gap: 4px;
+        font-size: 1rem;
+    }
+
+    .stat-icon {
+        font-size: 1.3rem;
+    }
+
+    .stat-value {
+        font-size: 1.3rem;
+    }
+
+    /* 経験値バーのテキストも小さく */
+    .exp-text {
+        font-size: 0.8rem;
+        min-width: 80px;
+    }
+
+    /* 問題表示 */
     .question-display {
         font-size: 3rem;
         gap: 15px;
     }
 
+    /* 回答ボタン */
     .answer-buttons {
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
@@ -484,12 +521,49 @@ body {
         font-size: 2rem;
     }
 
+    /* エフェクトタイトル */
     .level-up-title {
         font-size: 3rem;
     }
 
     .complete-title {
         font-size: 2.5rem;
+    }
+}
+
+/* 小型スマホ対応（さらに小さい画面） */
+@media (max-width: 480px) {
+    .stats {
+        margin-bottom: 10px;
+    }
+
+    .stat-item {
+        gap: 3px;
+        font-size: 0.9rem;
+    }
+
+    .stat-icon {
+        font-size: 1.2rem;
+    }
+
+    .stat-value {
+        font-size: 1.1rem;
+    }
+
+    .exp-text {
+        font-size: 0.7rem;
+        min-width: 70px;
+    }
+
+    .question-display {
+        font-size: 2.5rem;
+        gap: 10px;
+    }
+
+    .answer-button {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
     }
 }
 
