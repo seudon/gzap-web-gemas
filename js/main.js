@@ -75,6 +75,12 @@ function initGame() {
     gameState.exp = 0;
     gameState.maxExp = 6; // Phase 3: 初期値を調整 (10 → 6)
 
+    // 必殺技エリアを表示（ゲーム再開時）
+    const specialMovesContainer = document.querySelector('.special-moves-container');
+    if (specialMovesContainer) {
+        specialMovesContainer.style.display = 'flex';
+    }
+
     // UI更新
     updateUI();
 
@@ -440,6 +446,12 @@ function gameComplete() {
     if (!gameState.drumButtonsInitialized) {
         initDrumButtons();
         gameState.drumButtonsInitialized = true;
+    }
+
+    // 必殺技エリアを非表示（クリア画面をすっきりさせる）
+    const specialMovesContainer = document.querySelector('.special-moves-container');
+    if (specialMovesContainer) {
+        specialMovesContainer.style.display = 'none';
     }
 
     // クリアエフェクト再生
