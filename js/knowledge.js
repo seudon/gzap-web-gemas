@@ -213,6 +213,292 @@ const knowledgeItems = [
         category: "数学者",
         title: "アンドリュー・ワイルズ",
         content: "1953年 - 現在<br>フェルマーの最終定理の証明"
+    },
+
+    // ============================================
+    // カテゴリー: 分数と小数
+    // ============================================
+    {
+        category: "分数と小数",
+        title: "1/4 を小数で表すと？",
+        content: "0.25"
+    },
+    {
+        category: "分数と小数",
+        title: "3/4 を小数で表すと？",
+        content: "0.75"
+    },
+    {
+        category: "分数と小数",
+        title: "1/8 を小数で表すと？",
+        content: "0.125"
+    },
+    {
+        category: "分数と小数",
+        title: "3/8 を小数で表すと？",
+        content: "0.375"
+    },
+    {
+        category: "分数と小数",
+        title: "5/8 を小数で表すと？",
+        content: "0.625"
+    },
+    {
+        category: "分数と小数",
+        title: "7/8 を小数で表すと？",
+        content: "0.875"
+    },
+    {
+        category: "分数と小数",
+        title: "1/12 を小数で表すと？",
+        content: "0.0833..."
+    },
+    {
+        category: "分数と小数",
+        title: "1/24 を小数で表すと？",
+        content: "0.0416..."
+    },
+
+    // ============================================
+    // カテゴリー: 平方数
+    // ============================================
+    {
+        category: "平方数",
+        title: "11 × 11 = ?",
+        content: "121"
+    },
+    {
+        category: "平方数",
+        title: "12 × 12 = ?",
+        content: "144"
+    },
+    {
+        category: "平方数",
+        title: "13 × 13 = ?",
+        content: "169"
+    },
+    {
+        category: "平方数",
+        title: "14 × 14 = ?",
+        content: "196"
+    },
+    {
+        category: "平方数",
+        title: "15 × 15 = ?",
+        content: "225"
+    },
+    {
+        category: "平方数",
+        title: "16 × 16 = ?",
+        content: "256"
+    },
+    {
+        category: "平方数",
+        title: "17 × 17 = ?",
+        content: "289"
+    },
+    {
+        category: "平方数",
+        title: "18 × 18 = ?",
+        content: "324"
+    },
+    {
+        category: "平方数",
+        title: "19 × 19 = ?",
+        content: "361"
+    },
+    {
+        category: "平方数",
+        title: "20 × 20 = ?",
+        content: "400"
+    },
+
+    // ============================================
+    // カテゴリー: 元素記号（周期表1-20）
+    // ============================================
+    {
+        category: "元素記号",
+        title: "1番: H",
+        content: "水素（Hydrogen）"
+    },
+    {
+        category: "元素記号",
+        title: "2番: He",
+        content: "ヘリウム（Helium）"
+    },
+    {
+        category: "元素記号",
+        title: "3番: Li",
+        content: "リチウム（Lithium）"
+    },
+    {
+        category: "元素記号",
+        title: "4番: Be",
+        content: "ベリリウム（Beryllium）"
+    },
+    {
+        category: "元素記号",
+        title: "5番: B",
+        content: "ホウ素（Boron）"
+    },
+    {
+        category: "元素記号",
+        title: "6番: C",
+        content: "炭素（Carbon）"
+    },
+    {
+        category: "元素記号",
+        title: "7番: N",
+        content: "窒素（Nitrogen）"
+    },
+    {
+        category: "元素記号",
+        title: "8番: O",
+        content: "酸素（Oxygen）"
+    },
+    {
+        category: "元素記号",
+        title: "9番: F",
+        content: "フッ素（Fluorine）"
+    },
+    {
+        category: "元素記号",
+        title: "10番: Ne",
+        content: "ネオン（Neon）"
+    },
+    {
+        category: "元素記号",
+        title: "11番: Na",
+        content: "ナトリウム（Sodium）"
+    },
+    {
+        category: "元素記号",
+        title: "12番: Mg",
+        content: "マグネシウム（Magnesium）"
+    },
+    {
+        category: "元素記号",
+        title: "13番: Al",
+        content: "アルミニウム（Aluminium）"
+    },
+    {
+        category: "元素記号",
+        title: "14番: Si",
+        content: "ケイ素（Silicon）"
+    },
+    {
+        category: "元素記号",
+        title: "15番: P",
+        content: "リン（Phosphorus）"
+    },
+    {
+        category: "元素記号",
+        title: "16番: S",
+        content: "硫黄（Sulfur）"
+    },
+    {
+        category: "元素記号",
+        title: "17番: Cl",
+        content: "塩素（Chlorine）"
+    },
+    {
+        category: "元素記号",
+        title: "18番: Ar",
+        content: "アルゴン（Argon）"
+    },
+    {
+        category: "元素記号",
+        title: "19番: K",
+        content: "カリウム（Potassium）"
+    },
+    {
+        category: "元素記号",
+        title: "20番: Ca",
+        content: "カルシウム（Calcium）"
+    },
+
+    // ============================================
+    // カテゴリー: 化学式（中学生レベル）
+    // ============================================
+    {
+        category: "化学式",
+        title: "水",
+        content: "H₂O"
+    },
+    {
+        category: "化学式",
+        title: "二酸化炭素",
+        content: "CO₂"
+    },
+    {
+        category: "化学式",
+        title: "酸素",
+        content: "O₂"
+    },
+    {
+        category: "化学式",
+        title: "水素",
+        content: "H₂"
+    },
+    {
+        category: "化学式",
+        title: "窒素",
+        content: "N₂"
+    },
+    {
+        category: "化学式",
+        title: "アンモニア",
+        content: "NH₃"
+    },
+    {
+        category: "化学式",
+        title: "塩化ナトリウム（食塩）",
+        content: "NaCl"
+    },
+    {
+        category: "化学式",
+        title: "酸化銀",
+        content: "Ag₂O"
+    },
+    {
+        category: "化学式",
+        title: "酸化銅",
+        content: "CuO"
+    },
+    {
+        category: "化学式",
+        title: "硫化鉄",
+        content: "FeS"
+    },
+    {
+        category: "化学式",
+        title: "炭酸水素ナトリウム（重曹）",
+        content: "NaHCO₃"
+    },
+    {
+        category: "化学式",
+        title: "炭酸ナトリウム",
+        content: "Na₂CO₃"
+    },
+    {
+        category: "化学式",
+        title: "塩化水素（塩酸）",
+        content: "HCl"
+    },
+    {
+        category: "化学式",
+        title: "水酸化ナトリウム",
+        content: "NaOH"
+    },
+    {
+        category: "化学式",
+        title: "硫酸",
+        content: "H₂SO₄"
+    },
+    {
+        category: "化学式",
+        title: "マグネシウムの燃焼",
+        content: "2Mg + O₂ → 2MgO"
     }
 ];
 
