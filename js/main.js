@@ -941,6 +941,72 @@ function activateSpecialMove(moveType, cost, activateFunc) {
 }
 
 /**
+ * 必殺技発動後の状態リセット（共通処理）
+ * @param {string} moveType - 必殺技タイプ ('timeStop', 'slowMotion', 'hint')
+ */
+function resetSpecialMove(moveType) {
+    if (DEBUG_MODE) console.log('🔄 必殺技リセット:', moveType);
+
+    // 1. 発動状態をfalseに
+    specialMoveState.active[moveType] = false;
+
+    // 2. ボタンのactiveクラスを削除
+    const button = document.querySelector(`[data-move="${moveType}"]`);
+    if (button) {
+        button.classList.remove('active');
+    }
+
+    // 3. ボタンの有効/無効を更新
+    updateSpecialButtons();
+
+    // 4. 必殺技固有のリセット処理
+    switch (moveType) {
+        case 'timeStop':
+            // タイマーとボタンアニメーションを再開
+            resumeTimer();
+            resumeButtonAnimations();
+            // BGMを再開（レベルに応じて）
+            restoreBGM();
+            break;
+
+        case 'slowMotion':
+            // タイムスケールを戻す
+            gsap.globalTimeline.timeScale(1);
+            // スローモーションBGMを停止して通常BGMに戻す
+            stopSlowMotionBGM();
+            restoreBGM();
+            break;
+
+        case 'hint':
+            // ヒントは特別なリセット処理なし
+            break;
+    }
+
+    if (DEBUG_MODE) console.log('✅ 必殺技リセット完了:', moveType);
+}
+
+/**
+ * BGMを適切な状態に復元
+ */
+function restoreBGM() {
+    // 他の必殺技が発動中でない場合のみBGMを再開
+    if (!specialMoveState.active.timeStop && !specialMoveState.active.slowMotion) {
+        // レベルに応じたBGMを再生
+        if (gameState.level >= 11) {
+            // Lv11以上の場合、BGMが再生中かチェック
+            const lv11_20BGMs = audioCache.bgm.lv11_20;
+            const isAnyBGMPlaying = lv11_20BGMs.some(bgm => !bgm.paused);
+
+            if (!isAnyBGMPlaying) {
+                playLv11_20BGM();
+                if (DEBUG_MODE) console.log('🎵 BGM再開 (Lv11-20)');
+            }
+        }
+        // Lv1-10ではBGMなし
+    }
+}
+
+/**
  * ⏸️ 時間停止 発動
  */
 function activateTimeStop() {
@@ -974,33 +1040,9 @@ function activateTimeStop() {
 
         // 10秒後に解除
         specialMoveState.cooldownTimers.timeStop = setTimeout(() => {
-            deactivateTimeStop();
+            resetSpecialMove('timeStop');
         }, 10000);
     });
-}
-
-/**
- * ⏸️ 時間停止 解除
- */
-function deactivateTimeStop() {
-    specialMoveState.active.timeStop = false;
-
-    const button = document.getElementById('timeStopBtn');
-    if (button) {
-        button.classList.remove('active');
-    }
-
-    // タイマーとボタンアニメーションを再開
-    resumeTimer();
-    resumeButtonAnimations();
-
-    // BGMを再開（レベルに応じて）
-    if (gameState.level >= 11) {
-        playLv11_20BGM();
-    }
-
-    if (DEBUG_MODE) console.log('⏸️ 時間停止 解除');
-    updateSpecialButtons();
 }
 
 /**
@@ -1037,33 +1079,9 @@ function activateSlowMotion() {
 
         // 8秒後に解除
         specialMoveState.cooldownTimers.slowMotion = setTimeout(() => {
-            deactivateSlowMotion();
+            resetSpecialMove('slowMotion');
         }, 8000);
     });
-}
-
-/**
- * 🐌 スローモーション 解除
- */
-function deactivateSlowMotion() {
-    specialMoveState.active.slowMotion = false;
-
-    const button = document.getElementById('slowMotionBtn');
-    if (button) {
-        button.classList.remove('active');
-    }
-
-    // タイムスケールを戻す
-    gsap.globalTimeline.timeScale(1);
-
-    // スローモーションBGMを停止して通常BGMに戻す
-    stopSlowMotionBGM();
-    if (gameState.level >= 11) {
-        playLv11_20BGM();
-    }
-
-    if (DEBUG_MODE) console.log('🐌 スローモーション 解除');
-    updateSpecialButtons();
 }
 
 /**
@@ -1139,13 +1157,7 @@ function activateHint() {
 
         // ヒントは即座に終了（エフェクト終了後にリセット）
         setTimeout(() => {
-            specialMoveState.active.hint = false;
-            const button = document.getElementById('hintBtn');
-            if (button) {
-                button.classList.remove('active');
-            }
-            updateSpecialButtons();
-            if (DEBUG_MODE) console.log('💡 ヒント終了 - ボタンリセット完了');
+            resetSpecialMove('hint');
         }, 2000);  // グローエフェクトが完全に終わるまで待つ
     });
 }
