@@ -1261,3 +1261,22 @@ body {
         font-size: 1rem;
     }
 }
+
+/* スマホサイズでの設定ボタン最適化 */
+@media (max-width: 768px) {
+    .settings-icon-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+        top: 8px;
+        left: 8px;
+    }
+
+    .debug-icon-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+        top: 8px;
+        right: 8px;
+    }
+}
