@@ -174,6 +174,11 @@ function animateButtonsByLevel(level) {
     currentAnimationLevel = level;
     if (DEBUG_MODE) console.log('  現在のアニメーションレベルを設定:', currentAnimationLevel);
 
+    // 📱 スマホサイズ判定（タップしやすさの改善）
+    const isMobile = window.innerWidth <= 768;
+    const distanceMultiplier = isMobile ? 0.7 : 1; // スマホ版では移動距離を70%に抑制
+    if (DEBUG_MODE && isMobile) console.log('📱 モバイル版: 移動距離を70%に抑制');
+
     // 🔧 時間停止中はアニメーションを開始しない
     if (isTimeStopActive) {
         if (DEBUG_MODE) console.log('⏸️ 時間停止中のため、アニメーション開始をスキップ');
@@ -508,14 +513,16 @@ function animateButtonsByLevel(level) {
         buttons.forEach((button, index) => {
             const targetLevel = level;
             // レベルに応じてボタンサイズを段階的に縮小
-            const buttonScale = 1.0 - (level - 10) * 0.03; // Lv11: 0.97, Lv12: 0.94, ..., Lv15: 0.85
+            let buttonScale = 1.0 - (level - 10) * 0.03; // Lv11: 0.97, Lv12: 0.94, ..., Lv15: 0.85
+            // 📱 スマホ版: 最小サイズを0.88に制限（タップしやすく）
+            if (isMobile && buttonScale < 0.88) buttonScale = 0.88;
             if (DEBUG_MODE) console.log('  Lv' + level + ' ボタンサイズ: ' + buttonScale.toFixed(2));
 
             const complexRandomMove = () => {
                 if (currentAnimationLevel !== targetLevel) return;
 
                 const duration = gsap.utils.random(0.4, 0.7);
-                const distance = gsap.utils.random(80, 100);
+                const distance = gsap.utils.random(80, 100) * distanceMultiplier; // 📱 スマホ版では距離を70%に
                 const angle = gsap.utils.random(0, Math.PI * 2);
 
                 gsap.to(button, {
@@ -537,7 +544,9 @@ function animateButtonsByLevel(level) {
         buttons.forEach((button, index) => {
             const targetLevel = level;
             // レベルに応じてボタンサイズをさらに縮小
-            const buttonScale = 0.85 - (level - 15) * 0.03; // Lv16: 0.82, Lv17: 0.79, ..., Lv20: 0.70
+            let buttonScale = 0.85 - (level - 15) * 0.03; // Lv16: 0.82, Lv17: 0.79, ..., Lv20: 0.70
+            // 📱 スマホ版: 最小サイズを0.85に制限（タップしやすく）
+            if (isMobile && buttonScale < 0.85) buttonScale = 0.85;
             if (DEBUG_MODE) console.log('  Lv' + level + ' ボタンサイズ: ' + buttonScale.toFixed(2));
 
             const hyperComplexMove = () => {
@@ -549,8 +558,8 @@ function animateButtonsByLevel(level) {
                         const tl = gsap.timeline({ onComplete: hyperComplexMove });
                         for (let i = 0; i < 5; i++) {
                             tl.to(button, {
-                                x: gsap.utils.random(-150, 150),
-                                y: gsap.utils.random(-150, 150),
+                                x: gsap.utils.random(-150, 150) * distanceMultiplier, // 📱 スマホ版では距離を70%に
+                                y: gsap.utils.random(-150, 150) * distanceMultiplier,
                                 rotation: gsap.utils.random(-180, 180),
                                 scale: buttonScale + gsap.utils.random(-0.08, 0.08),
                                 duration: 0.25,
@@ -564,7 +573,7 @@ function animateButtonsByLevel(level) {
                         const tl = gsap.timeline({ onComplete: hyperComplexMove });
                         for (let i = 0; i < 12; i++) {
                             const angle = (i / 12) * Math.PI * 2;
-                            const radius = 120 - i * 8;
+                            const radius = (120 - i * 8) * distanceMultiplier; // 📱 スマホ版では距離を70%に
                             tl.to(button, {
                                 x: Math.cos(angle) * radius,
                                 y: Math.sin(angle) * radius,
@@ -578,7 +587,7 @@ function animateButtonsByLevel(level) {
                     },
                     // カオス的な動き（最大範囲）
                     () => {
-                        const distance = gsap.utils.random(120, 150);
+                        const distance = gsap.utils.random(120, 150) * distanceMultiplier; // 📱 スマホ版では距離を70%に
                         const angle = gsap.utils.random(0, Math.PI * 2);
                         gsap.to(button, {
                             x: Math.cos(angle) * distance,
