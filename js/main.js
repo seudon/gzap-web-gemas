@@ -77,7 +77,17 @@ const GAME_CONSTANTS = {
     COMBO_SOUND_THRESHOLD_3: 15,     // コンボ音レベル3の閾値
 
     // ドラム機能
-    DRUM_CLICK_THRESHOLD: 10         // ドラムボタンを何回叩いたら知識表示するか
+    DRUM_CLICK_THRESHOLD: 10,        // ドラムボタンを何回叩いたら知識表示するか
+
+    // 演算子設定
+    OPERATORS: {
+        ADDITION: '+',
+        SUBTRACTION: '-',
+        MULTIPLICATION: '*'
+    },
+
+    // 掛け算の数値範囲（九九固定）
+    MULTIPLICATION_NUMBER_MAX: 9
 };
 
 // ゲーム状態管理
@@ -95,7 +105,12 @@ const gameState = {
     drumClickCount: 0,   // ドラムボタンクリック回数
     currentFormulaIndex: 0,  // 現在表示中の公式インデックス
     timeLimitEnabled: false,  // 時間制限モードON/OFF
-    specialMoveButtonsInitialized: false  // 必殺技ボタン初期化済みフラグ
+    specialMoveButtonsInitialized: false,  // 必殺技ボタン初期化済みフラグ
+    selectedOperators: {      // 演算子選択状態
+        addition: true,       // 足し算（デフォルトON）
+        subtraction: false,   // 引き算
+        multiplication: false // 掛け算
+    }
 };
 
 // ゲーム設定
@@ -234,14 +249,50 @@ function generateQuestion() {
         maxNumber = GAME_CONSTANTS.NUMBER_RANGE_HARD;
     }
 
-    // ランダムな足し算問題を生成
-    const num1 = Math.floor(Math.random() * maxNumber) + 1;
-    const num2 = Math.floor(Math.random() * maxNumber) + 1;
-    const answer = num1 + num2;
+    // 有効な演算子からランダムに選択
+    const enabledOperators = [];
+    if (gameState.selectedOperators.addition) enabledOperators.push(GAME_CONSTANTS.OPERATORS.ADDITION);
+    if (gameState.selectedOperators.subtraction) enabledOperators.push(GAME_CONSTANTS.OPERATORS.SUBTRACTION);
+    if (gameState.selectedOperators.multiplication) enabledOperators.push(GAME_CONSTANTS.OPERATORS.MULTIPLICATION);
 
-    gameState.currentQuestion = { num1, num2, answer };
+    // フォールバック: 何も選択されていない場合は足し算
+    if (enabledOperators.length === 0) {
+        enabledOperators.push(GAME_CONSTANTS.OPERATORS.ADDITION);
+    }
 
-    if (DEBUG_MODE) console.log('❓ 新しい問題生成:', num1 + ' + ' + num2 + ' = ?', '(答え: ' + answer + ')');
+    const operator = enabledOperators[Math.floor(Math.random() * enabledOperators.length)];
+
+    let num1, num2, answer;
+
+    switch (operator) {
+        case GAME_CONSTANTS.OPERATORS.ADDITION:
+            // 足し算（既存ロジック）
+            num1 = Math.floor(Math.random() * maxNumber) + 1;
+            num2 = Math.floor(Math.random() * maxNumber) + 1;
+            answer = num1 + num2;
+            break;
+
+        case GAME_CONSTANTS.OPERATORS.SUBTRACTION:
+            // 引き算（答えがマイナスにならないよう num1 >= num2）
+            const tempA = Math.floor(Math.random() * maxNumber) + 1;
+            const tempB = Math.floor(Math.random() * maxNumber) + 1;
+            num1 = Math.max(tempA, tempB);
+            num2 = Math.min(tempA, tempB);
+            answer = num1 - num2;
+            break;
+
+        case GAME_CONSTANTS.OPERATORS.MULTIPLICATION:
+            // 掛け算（九九の範囲 1-9 固定）
+            num1 = Math.floor(Math.random() * GAME_CONSTANTS.MULTIPLICATION_NUMBER_MAX) + 1;
+            num2 = Math.floor(Math.random() * GAME_CONSTANTS.MULTIPLICATION_NUMBER_MAX) + 1;
+            answer = num1 * num2;
+            break;
+    }
+
+    gameState.currentQuestion = { num1, num2, answer, operator };
+
+    const displayOp = operator === GAME_CONSTANTS.OPERATORS.MULTIPLICATION ? 'x' : operator;
+    if (DEBUG_MODE) console.log('❓ 新しい問題生成:', num1 + ' ' + displayOp + ' ' + num2 + ' = ?', '(答え: ' + answer + ')');
 
     // 問題を画面に表示
     displayQuestion();
@@ -271,9 +322,13 @@ function generateQuestion() {
  * 問題を画面に表示
  */
 function displayQuestion() {
-    const { num1, num2 } = gameState.currentQuestion;
+    const { num1, num2, operator } = gameState.currentQuestion;
     document.getElementById('num1').textContent = num1;
     document.getElementById('num2').textContent = num2;
+
+    // 演算子を表示（掛け算は x 記号で表示）
+    const displayOperator = operator === GAME_CONSTANTS.OPERATORS.MULTIPLICATION ? 'x' : operator;
+    document.getElementById('operator').textContent = displayOperator;
 }
 
 /**
@@ -1423,6 +1478,56 @@ function initSettingsPanel() {
             resetTimer();
         }
     });
+
+    // 演算子チェックボックスの初期化
+    const additionCheckbox = document.getElementById('additionEnabled');
+    const subtractionCheckbox = document.getElementById('subtractionEnabled');
+    const multiplicationCheckbox = document.getElementById('multiplicationEnabled');
+
+    // 初期状態を設定
+    if (additionCheckbox) additionCheckbox.checked = gameState.selectedOperators.addition;
+    if (subtractionCheckbox) subtractionCheckbox.checked = gameState.selectedOperators.subtraction;
+    if (multiplicationCheckbox) multiplicationCheckbox.checked = gameState.selectedOperators.multiplication;
+
+    // 最低1つは選択されていることを保証するヘルパー関数
+    const ensureAtLeastOneSelected = () => {
+        const anySelected = gameState.selectedOperators.addition ||
+                           gameState.selectedOperators.subtraction ||
+                           gameState.selectedOperators.multiplication;
+        if (!anySelected) {
+            // 何も選択されていない場合は足し算を強制的にON
+            gameState.selectedOperators.addition = true;
+            if (additionCheckbox) additionCheckbox.checked = true;
+            if (DEBUG_MODE) console.log('⚠️ 最低1つの演算子が必要です。足し算を自動選択しました。');
+        }
+    };
+
+    // 足し算チェックボックス
+    if (additionCheckbox) {
+        additionCheckbox.addEventListener('change', (e) => {
+            gameState.selectedOperators.addition = e.target.checked;
+            ensureAtLeastOneSelected();
+            if (DEBUG_MODE) console.log('足し算:', gameState.selectedOperators.addition ? 'ON' : 'OFF');
+        });
+    }
+
+    // 引き算チェックボックス
+    if (subtractionCheckbox) {
+        subtractionCheckbox.addEventListener('change', (e) => {
+            gameState.selectedOperators.subtraction = e.target.checked;
+            ensureAtLeastOneSelected();
+            if (DEBUG_MODE) console.log('引き算:', gameState.selectedOperators.subtraction ? 'ON' : 'OFF');
+        });
+    }
+
+    // 掛け算チェックボックス
+    if (multiplicationCheckbox) {
+        multiplicationCheckbox.addEventListener('change', (e) => {
+            gameState.selectedOperators.multiplication = e.target.checked;
+            ensureAtLeastOneSelected();
+            if (DEBUG_MODE) console.log('掛け算:', gameState.selectedOperators.multiplication ? 'ON' : 'OFF');
+        });
+    }
 }
 
 /**

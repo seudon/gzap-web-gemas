@@ -1178,6 +1178,90 @@ body {
 }
 
 /* ========================================
+   演算子選択チェックボックス
+   ======================================== */
+.operator-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px 0;
+}
+
+.operator-item {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    gap: 10px;
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.3);
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+    background: linear-gradient(135deg, #6bcf7f 0%, #38f9d7 100%);
+    border-color: #6bcf7f;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '\2713';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.checkbox-label:hover .checkbox-custom {
+    border-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 10px rgba(107, 207, 127, 0.5);
+}
+
+.checkbox-text {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.operator-hint {
+    font-size: 0.8rem;
+    color: #aaaaaa;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .checkbox-custom {
+        width: 22px;
+        height: 22px;
+    }
+
+    .checkbox-text {
+        font-size: 0.9rem;
+    }
+}
+
+/* ========================================
    ユーティリティクラス
    ======================================== */
 .hidden {
